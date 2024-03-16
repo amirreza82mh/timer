@@ -2,14 +2,20 @@ import time
 import os
 import csv
 from datetime import datetime, date, timedelta
+import glob
 
 FILE_NAME = 'log.csv'
 
-def stopwatch_timer():
-    start_time = time.time()
-    time_str = str()
-    start_date_time = datetime.now().replace(microsecond=0)
 
+def stopwatch_timer() -> None:
+
+    print('timer started!')
+    print("Press Ctrl+C to stop the timer.\n\n")
+
+    start_time = time.time()
+    start_date_time = datetime.now().replace(microsecond=0)
+    time_str = str()
+    
     try:
         while True:
             current_time = time.gmtime(time.time() - start_time)
@@ -34,10 +40,12 @@ def stopwatch_timer():
         w.writerow(log_list)
 
 
-def countdown_timer(minutes):
+def countdown_timer(minutes) -> None:
+
     total_time = [str(minutes), "00"]
     total_seconds = minutes * 60
     time_str = str()
+
     start_date_time = datetime.now().replace(microsecond=0)
 
     try:
@@ -64,25 +72,25 @@ def countdown_timer(minutes):
         w.writerow(log_list)
 
 
-def time_conversion(total_time):
-    hour = total_time // 3600
-    minutes = (total_time % 3600) // 60
-    second = total_time % 60
+def time_conversion(total_time_second):
+    hour = total_time_second // 3600
+    minutes = (total_time_second % 3600) // 60
+    second = total_time_second % 60
     print(f'{hour}:{minutes}:{second}')
 
 
 def specific_day_time(day):
     print(day)
-    total_time = 0
+    total_time_second = 0
     with open(FILE_NAME, 'r') as log:
         r = csv.reader(log)
         for i in r:
             date_csv, _ = i[2].split(' ')
             if  day == date_csv:
-                total_time += int(i[0]) * 60 + int(i[1]) 
+                total_time_second += int(i[0]) * 60 + int(i[1]) 
 
-        time_conversion(total_time=total_time)
-        print()
+    time_conversion(total_time_second=total_time_second)
+    print()
 
 
 def main():
@@ -95,8 +103,9 @@ def main():
         print('2) count down')
         print('3) total times today')
         print('4) total times last week')
-        print('5) total time last month')
-        print('6) exit')
+        print('5) total time in this file')
+        print('6) total time in selected file')
+        print('7) exit')
 
         print('\n-----------------------------------\n')
        
@@ -111,37 +120,31 @@ def main():
 
         if(option == 1):
             os.system('clear')
-
-            print('timer started!')
-            print("Press Ctrl+C to stop the timer.\n\n")
             stopwatch_timer()
-
             os.system('clear')
    
         elif(option == 2):
-            count_down = int()
-
             os.system('clear')
-            
+
+            count_down = int()            
             while(True):
                 try:
                     count_down = int(input("Enter a time in minutes for the countdown: "))
                     break
+                
                 except:
                     print('please enter valid input ')
                     continue
-
+                
             countdown_timer(count_down)
 
             os.system('clear')
 
         elif(option == 3):
             os.system('clear')
-                
-            today = str(date.today())                
-            specific_day_time(today)
 
-            input("\nEnter space to continue...")
+            specific_day_time(str(date.today()))
+            input("Enter space to continue...")
 
             os.system('clear')
         
@@ -189,8 +192,40 @@ def main():
             input("\nEnter space to continue...")
 
             os.system('clear')
-
+        
         elif(option == 6):
+            os.system('clear')
+            csv_list = glob.glob("*.csv")
+            
+            for i in csv_list:
+                print(f'{csv_list.index(i) + 1}.{i}')
+            
+            while(True):
+                try:
+                    selected_index = int(input('\n\nplease choose a csv file to show total time: '))
+                    file_name = csv_list[selected_index - 1]
+                    break
+                except:
+                    print('please enter valid input!')
+                    continue
+
+            os.system('clear')
+            total_time = 0
+
+            with open(file_name, 'r') as log:
+                r = csv.reader(log) 
+
+                for i in r:
+                    total_time += int(i[0]) * 60 + int(i[1])
+                
+                print(f'totla time in {file_name.rstrip('.csv')}: ', end='')
+                time_conversion(total_time=total_time)
+
+            input("\nEnter space to continue...")
+
+            os.system('clear')
+        
+        elif(option == 7):
             os.system('clear')
             break;
 
