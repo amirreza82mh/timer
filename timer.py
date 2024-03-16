@@ -88,9 +88,9 @@ def specific_day_time(day):
             date_csv, _ = i[2].split(' ')
             if  day == date_csv:
                 total_time_second += int(i[0]) * 60 + int(i[1]) 
-
     time_conversion(total_time_second=total_time_second)
     print()
+    return total_time_second
 
 
 def main():
@@ -143,7 +143,7 @@ def main():
         elif(option == 3):
             os.system('clear')
 
-            specific_day_time(str(date.today()))
+            _ = specific_day_time(str(date.today()))
             input("Enter space to continue...")
 
             os.system('clear')
@@ -152,24 +152,14 @@ def main():
             os.system('clear')
 
             today = date.today()
-            week_list = list()
-            total_time = 0
+            total_time_second = 0
 
             for i in range(0,7):
                 day = str(today - timedelta(days=i))
-                specific_day_time(day)
-                week_list.append(day)
+                total_time_second += specific_day_time(day)
 
-            with open(FILE_NAME, 'r') as log:
-                r = csv.reader(log) 
-
-                for i in r:
-                    date_csv, _ = i[2].split(' ')
-                    if date_csv in week_list:
-                        total_time += int(i[0]) * 60 + int(i[1])
-                
-                print('totla time: ', end='')
-                time_conversion(total_time=total_time)
+            print('total time: ', end='')
+            time_conversion(total_time_second=total_time_second)
             
             input("\nEnter space to continue...")
 
@@ -178,16 +168,16 @@ def main():
         elif(option == 5):
             os.system('clear')
 
-            total_time = 0
+            total_time_second = 0
 
             with open(FILE_NAME, 'r') as log:
                 r = csv.reader(log) 
 
                 for i in r:
-                    total_time += int(i[0]) * 60 + int(i[1])
+                    total_time_second += int(i[0]) * 60 + int(i[1])
                 
-                print('totla time: ', end='')
-                time_conversion(total_time=total_time)
+            print(f'totla time in {FILE_NAME.rstrip('.csv')}: ', end='')
+            time_conversion(total_time_second=total_time_second)
             
             input("\nEnter space to continue...")
 
@@ -195,6 +185,7 @@ def main():
         
         elif(option == 6):
             os.system('clear')
+
             csv_list = glob.glob("*.csv")
             
             for i in csv_list:
@@ -210,16 +201,17 @@ def main():
                     continue
 
             os.system('clear')
-            total_time = 0
+
+            total_time_second = 0
 
             with open(file_name, 'r') as log:
                 r = csv.reader(log) 
 
                 for i in r:
-                    total_time += int(i[0]) * 60 + int(i[1])
+                    total_time_second += int(i[0]) * 60 + int(i[1])
                 
                 print(f'totla time in {file_name.rstrip('.csv')}: ', end='')
-                time_conversion(total_time=total_time)
+                time_conversion(total_time_second=total_time_second)
 
             input("\nEnter space to continue...")
 
