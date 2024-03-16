@@ -3,14 +3,16 @@ import os
 import csv
 from datetime import datetime, date, timedelta
 import glob
+import pyfiglet
+from colorama import Fore, Back, Style
 
-FILE_NAME = 'log.csv'
+FILE_NAME = 'test.csv'
 
 
 def stopwatch_timer() -> None:
 
-    print('timer started!')
-    print("Press Ctrl+C to stop the timer.\n\n")
+    print(Fore.GREEN + 'timer started!' + Style.RESET_ALL)
+    print(Fore.CYAN + 'Press Ctrl+C to stop the timer.' + Style.RESET_ALL + '\n\n')
 
     start_time = time.time()
     start_date_time = datetime.now().replace(microsecond=0)
@@ -19,16 +21,16 @@ def stopwatch_timer() -> None:
     try:
         while True:
             current_time = time.gmtime(time.time() - start_time)
-            time_str = time.strftime("%M minutes, %S seconds", current_time)
+            time_str = time.strftime("%M " + Fore.BLUE + 'minutes' + Style.RESET_ALL + ', %S ' + Fore.BLUE + "seconds" + Style.RESET_ALL, current_time)
             print(time_str, end="\r")
             time.sleep(1)
 
     except KeyboardInterrupt:
-        print("\n\nTimer stopped!")
+        print("\n\n" + Fore.RED + "Timer stopped!" + Style.RESET_ALL)
 
     finish_date_time = datetime.now().replace(microsecond=0)
 
-    message = input('Enter a message: ')
+    message = input(Fore.YELLOW + 'Enter a message: ' + Style.RESET_ALL)
     if message is '':
         message = 'Null'
 
@@ -48,20 +50,24 @@ def countdown_timer(minutes) -> None:
 
     start_date_time = datetime.now().replace(microsecond=0)
 
+    print()
+
     try:
         for i in range(total_seconds, 0, -1):
-            time_str = f"Time remaining: {i // 60} minutes {i % 60} seconds"
+            time_str = Fore.CYAN + "Time remaining: " + Style.RESET_ALL + f' {i // 60} minutes {i % 60} seconds'
             print(time_str, end="\r")
             time.sleep(1)
+        os.system('make; spd-say \'pashoo pashoo tamom shoad\'')
 
     except KeyboardInterrupt:
         temp = time_str.split(' ')
-        total_time = total_seconds - (int(temp[2]) * 60 + int(temp[4]))
-        total_time = [str(total_time // 60) , str(total_time % 60)] 
+        total_time = total_seconds - (int(temp[3]) * 60 + int(temp[5]))
+        total_time = [str(total_time // 60) , str(total_time % 60)]
+        print("\n\n" + Fore.RED + "Timer stopped!" + Style.RESET_ALL) 
     
     finish_date_time = datetime.now().replace(microsecond=0)
     
-    message = input('\n\nEnter a message: ')
+    message = input(Fore.YELLOW + 'Enter a message: ' + Style.RESET_ALL)
     if message is '':
         message = 'Null'
     
@@ -72,15 +78,20 @@ def countdown_timer(minutes) -> None:
         w.writerow(log_list)
 
 
-def time_conversion(total_time_second):
+def time_conversion(total_time_second, color='GREEN'):
     hour = total_time_second // 3600
     minutes = (total_time_second % 3600) // 60
     second = total_time_second % 60
-    print(f'{hour}:{minutes}:{second}')
+    
+    if(color == 'GREEN'):
+        print(Fore.GREEN + f'{hour}:{minutes}:{second}' + Style.RESET_ALL)
+    
+    elif(color == 'WHITE'):
+        print(Fore.WHITE + f'{hour}:{minutes}:{second}' + Style.RESET_ALL)
 
 
 def specific_day_time(day):
-    print(day)
+    print(Fore.BLUE + day + Style.RESET_ALL)
     total_time_second = 0
     with open(FILE_NAME, 'r') as log:
         r = csv.reader(log)
@@ -89,51 +100,64 @@ def specific_day_time(day):
             if  day == date_csv:
                 total_time_second += int(i[0]) * 60 + int(i[1]) 
     time_conversion(total_time_second=total_time_second)
-    print()
     return total_time_second
 
 
 def main():
 
     os.system('clear')
+
     option = int()
 
     while(True):
-        print('1) start timer')
-        print('2) count down')
-        print('3) total times today')
-        print('4) total times last week')
-        print('5) total time in this file')
-        print('6) total time in selected file')
-        print('7) exit')
+        title_text = pyfiglet.figlet_format('amir timer', font='slant')        
+        print(Back.BLACK + Fore.YELLOW + Style.BRIGHT + title_text + Style.RESET_ALL)
+        
+        print(Fore.CYAN + '1: ' + Style.RESET_ALL + 'start timer')
+        print(Fore.CYAN + '2: ' + Style.RESET_ALL + 'count down')
+        print(Fore.CYAN + '3: ' + Style.RESET_ALL + 'total times today')
+        print(Fore.CYAN + '4: ' + Style.RESET_ALL +  'total times last week')
+        print(Fore.CYAN + '5: ' + Style.RESET_ALL +  'total time in this file')
+        print(Fore.CYAN + '6: ' + Style.RESET_ALL +  'total time in selected file')
+        print(Fore.CYAN + '7: ' + Style.RESET_ALL +  'exit')
 
         print('\n-----------------------------------\n')
        
         while(True):
             try:
-                option = int(input('choose an option: '))
+                option = int(input(Fore.GREEN    + 'choose an option: ' + Style.RESET_ALL))
                 break
             
             except: 
-                print('please enter valid input ')
+                print(Fore.RED + 'please enter valid input' + Style.RESET_ALL)
+                print()
                 continue
 
         if(option == 1):
             os.system('clear')
+            
+            title_text = pyfiglet.figlet_format('amir timer', font='slant')        
+            print(Back.BLACK + Fore.WHITE + Style.BRIGHT + title_text + Style.RESET_ALL)
+            
             stopwatch_timer()
+            
             os.system('clear')
    
         elif(option == 2):
             os.system('clear')
-
+            
+            title_text = pyfiglet.figlet_format('amir timer', font='slant')        
+            print(Back.BLACK + Fore.BLUE + Style.BRIGHT + title_text + Style.RESET_ALL)
+            
             count_down = int()            
             while(True):
                 try:
-                    count_down = int(input("Enter a time in minutes for the countdown: "))
+                    count_down = int(input(Fore.GREEN + "Enter a time in minutes for the countdown: " + Style.RESET_ALL))
                     break
                 
                 except:
-                    print('please enter valid input ')
+                    print(Fore.RED + 'please enter valid input ' + Style.RESET_ALL)
+                    print()
                     continue
                 
             countdown_timer(count_down)
@@ -143,13 +167,20 @@ def main():
         elif(option == 3):
             os.system('clear')
 
+            title_text = pyfiglet.figlet_format('amir timer', font='slant')        
+            print(Back.BLACK + Fore.RED + Style.BRIGHT + title_text + Style.RESET_ALL)
+            
             _ = specific_day_time(str(date.today()))
-            input("Enter space to continue...")
+            print()
+            input(Fore.YELLOW + "Enter space to continue..." + Style.RESET_ALL)
 
             os.system('clear')
         
         elif(option == 4):
             os.system('clear')
+
+            title_text = pyfiglet.figlet_format('amir timer', font='slant')        
+            print(Back.BLACK + Fore.CYAN + Style.BRIGHT + title_text + Style.RESET_ALL)
 
             today = date.today()
             total_time_second = 0
@@ -157,17 +188,22 @@ def main():
             for i in range(0,7):
                 day = str(today - timedelta(days=i))
                 total_time_second += specific_day_time(day)
+                print('------------')
 
-            print('total time: ', end='')
-            time_conversion(total_time_second=total_time_second)
+            print()
+            print(Fore.CYAN + 'total time: ' + Style.RESET_ALL, end='')
+            time_conversion(total_time_second=total_time_second, color='WHITE')
             
-            input("\nEnter space to continue...")
+            input("\n" + Fore.YELLOW + "Enter space to continue..." + Style.RESET_ALL)
 
             os.system('clear')
         
         elif(option == 5):
             os.system('clear')
-
+            
+            title_text = pyfiglet.figlet_format('amir timer', font='slant')        
+            print(Back.BLACK + Fore.GREEN + Style.BRIGHT + title_text + Style.RESET_ALL)
+            
             total_time_second = 0
 
             with open(FILE_NAME, 'r') as log:
@@ -176,32 +212,43 @@ def main():
                 for i in r:
                     total_time_second += int(i[0]) * 60 + int(i[1])
                 
-            print(f'totla time in {FILE_NAME.rstrip('.csv')}: ', end='')
-            time_conversion(total_time_second=total_time_second)
+            print(Fore.CYAN + f'totla time in {FILE_NAME.rstrip('.csv')}: ' + Style.RESET_ALL, end='')
+            time_conversion(total_time_second=total_time_second, color="WHITE")
             
-            input("\nEnter space to continue...")
+            input("\n" + Fore.YELLOW + "Enter space to continue..." + Style.RESET_ALL)
 
             os.system('clear')
         
         elif(option == 6):
             os.system('clear')
 
+            title_text = pyfiglet.figlet_format('amir timer', font='slant')        
+            print(Back.BLACK + Fore.BLUE + Style.BRIGHT + title_text + Style.RESET_ALL)
+
             csv_list = glob.glob("*.csv")
+            csv_list.sort()
             
             for i in csv_list:
-                print(f'{csv_list.index(i) + 1}.{i}')
+                print(Fore.CYAN + f'{csv_list.index(i) + 1}:' + Style.RESET_ALL + f'{i}')
             
+            is_breake = 0
             while(True):
                 try:
-                    selected_index = int(input('\n\nplease choose a csv file to show total time: '))
+                    selected_index = int(input('\n\n' + Fore.WHITE + 'please choose a csv file to show total time: ' + Style.RESET_ALL))
+                    if(selected_index == 0):
+                        is_breake = 1
+                        break
                     file_name = csv_list[selected_index - 1]
                     break
                 except:
-                    print('please enter valid input!')
+                    print(Fore.RED + 'please enter valid input!' + Style.RESET_ALL)
                     continue
 
             os.system('clear')
 
+            if(is_breake == 1):
+                continue
+            
             total_time_second = 0
 
             with open(file_name, 'r') as log:
@@ -210,10 +257,10 @@ def main():
                 for i in r:
                     total_time_second += int(i[0]) * 60 + int(i[1])
                 
-                print(f'totla time in {file_name.rstrip('.csv')}: ', end='')
+                print(Fore.BLUE + f'totla time in' + Style.RESET_ALL + Fore.CYAN + f' {file_name.rstrip('.csv')}: ' + Style.RESET_ALL, end='')
                 time_conversion(total_time_second=total_time_second)
 
-            input("\nEnter space to continue...")
+            input("\n" + Fore.YELLOW + "Enter space to continue..." + Style.RESET_ALL)
 
             os.system('clear')
         
