@@ -20,10 +20,15 @@ def stopwatch_timer() -> None:
     
     try:
         while True:
-            current_time = time.gmtime(time.time() - start_time)
-            time_str = time.strftime("%M " + Fore.BLUE + 'minutes' + Style.RESET_ALL + ', %S ' + Fore.BLUE + "seconds" + Style.RESET_ALL, current_time)
+            elapsed_time = time.time() - start_time
+            minutes, seconds = divmod(int(elapsed_time), 60)
+            time_str = f"{minutes:02d} {Fore.BLUE}minutes{Style.RESET_ALL}, {seconds:02d} {Fore.BLUE}seconds{Style.RESET_ALL}"
             print(time_str, end="\r")
             time.sleep(1)
+            
+            if minutes >= 60:
+                print("\n\n" + Fore.YELLOW + "Timer reset to zero!" + Style.RESET_ALL)
+                start_time = time.time()
 
     except KeyboardInterrupt:
         print("\n\n" + Fore.RED + "Timer stopped!" + Style.RESET_ALL)
