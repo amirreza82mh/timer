@@ -6,7 +6,7 @@ import glob
 import pyfiglet
 from colorama import Fore, Back, Style
 
-FILE_NAME = 'test.csv'
+FILE_NAME = '1403_02_Ordibehest.csv'
 
 
 def stopwatch_timer() -> None:
@@ -25,10 +25,6 @@ def stopwatch_timer() -> None:
             time_str = f"{minutes:02d} {Fore.BLUE}minutes{Style.RESET_ALL}, {seconds:02d} {Fore.BLUE}seconds{Style.RESET_ALL}"
             print(time_str, end="\r")
             time.sleep(1)
-            
-            if minutes >= 60:
-                print("\n\n" + Fore.YELLOW + "Timer reset to zero!" + Style.RESET_ALL)
-                start_time = time.time()
 
     except KeyboardInterrupt:
         print("\n\n" + Fore.RED + "Timer stopped!" + Style.RESET_ALL)
