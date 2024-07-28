@@ -6,7 +6,7 @@ import glob
 import pyfiglet
 from colorama import Fore, Back, Style
 
-FILE_NAME = '1403_03_Khordad.csv'
+FILE_NAME = '1403_05_Mordad.csv'
 
 
 def stopwatch_timer() -> None:
